@@ -21,6 +21,8 @@ class Command(BaseCommand):
             return None
 
     def get_use(self, name):
+        if not name:
+            return None
         try:
             return Use.objects.get_or_create(name=name)[0]
         except Exception:
