@@ -23,6 +23,10 @@ class Command(BaseCommand):
 
     def get_owner(self, name=None, type=None, **kwargs):
         try:
+            if type == 'city':
+                type = 'public'
+            else:
+                type = 'private'
             return Owner.objects.get_or_create(name=name, defaults={
                 'owner_type': type,
             })[0]
