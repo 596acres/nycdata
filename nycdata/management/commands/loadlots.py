@@ -24,7 +24,10 @@ class Command(BaseCommand):
         if not name:
             return None
         try:
-            return Use.objects.get_or_create(name=name)[0]
+            return Use.objects.get_or_create(
+                name=name,
+                visible=False,
+            )[0]
         except Exception:
             return None
 
@@ -37,7 +40,7 @@ class Command(BaseCommand):
                 borough=lot['borough'],
                 bbl=lot['bbl'],
                 block=lot['block'],
-                lot=lot['lot'],
+                lot_number=lot['lot'],
                 state_province='NY',
                 country='USA',
                 postal_code=lot['zipcode'],
