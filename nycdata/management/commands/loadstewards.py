@@ -41,7 +41,6 @@ class Command(BaseCommand):
     def get_use(self):
         return Use.objects.get_or_create(
             name='garden',
-            slug='garden',
             visible=True,
         )[0]
 
@@ -64,6 +63,8 @@ class Command(BaseCommand):
             print row
             try:
                 lot = Lot.objects.get(bbl=row['bbl'])
+                lot.known_use = self.get_use()
+                lot.save()
                 self.add_steward_project(lot, **row)
             except Lot.DoesNotExist:
                 print "Couldn't find lot, skipping"
