@@ -9,8 +9,7 @@ class Command(BaseCommand):
     help = 'Loads NYC data (addresses, buildings, parcels, ...)'
 
     datasets = {
-        # eg:
-        #'addresses': 'nycdata.addresses',
+        'parcels': 'nycdata.parcels',
     }
 
     def handle(self, dataset_name, *args, **options):
