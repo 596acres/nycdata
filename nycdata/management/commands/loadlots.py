@@ -46,6 +46,8 @@ class Command(BaseCommand):
                 postal_code=lot['zipcode'],
                 centroid=self.get_centroid(lot['centroid']),
                 known_use=self.get_use(lot['actual_use']),
+                known_use_certainty=9,
+                known_use_locked=True,
                 accessible=lot['accessible'] == 't',
                 name=lot['name'],
             )
