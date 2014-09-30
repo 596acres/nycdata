@@ -64,6 +64,9 @@ class Command(BaseCommand):
             try:
                 lot = Lot.objects.get(bbl=row['bbl'])
                 lot.known_use = self.get_use()
+                lot.known_use_certainty = 10
+                lot.known_use_locked = True
+                lot.steward_inclusion_opt_in = True
                 lot.save()
                 self.add_steward_project(lot, **row)
             except Lot.DoesNotExist:
