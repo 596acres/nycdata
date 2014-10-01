@@ -33,7 +33,7 @@ class Command(BaseCommand):
             return None
 
     def get_parcel(self, bbl=None, centroid=None, **kwargs):
-        # TODO try to get by geom, then get by bbl
+        # Try to get by geom, then get by bbl
         try:
             return Parcel.objects.get(geom__contains=centroid)
         except Parcel.MultipleObjectsReturned:
