@@ -9,7 +9,7 @@ django-admin loadlotgroups $DATA_DIR/lotgroups.csv
 django-admin loadowners $DATA_DIR/owners.csv
 django-admin loadownercontacts $DATA_DIR/ownercontacts.csv
 django-admin loadstewards $DATA_DIR/stewards.csv
-django-admin loadorganizers $DATA_DIR/organizers.csv
-django-admin loadwatchers $DATA_DIR/watchers.csv
 django-admin loadnotes $DATA_DIR/notes.csv
 django-admin loadpictures $DATA_DIR/pictures.csv $DATA_DIR/pictures.tar.gz
+django-admin loadorganizers $DATA_DIR/organizers.csv
+django-admin loadwatchers $DATA_DIR/watchers.csv
