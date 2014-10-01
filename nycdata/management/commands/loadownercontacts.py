@@ -1,5 +1,5 @@
 #
-# Load owner contacts exported from original database
+# Load owner contacts (non-default) exported from original database
 #
 import csv
 
@@ -11,7 +11,7 @@ from owners.models import OwnerContact
 
 class Command(BaseCommand):
     args = 'filename'
-    help = 'Loads NYC owners exported from original database'
+    help = 'Loads NYC owner contacts exported from original database'
 
     def get_owner_contact(self, owner=None, name=None, **defaults):
         defaults = { k: defaults[k] for k in ('phone', 'email', 'notes') }
