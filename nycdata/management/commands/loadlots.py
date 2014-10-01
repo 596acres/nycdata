@@ -21,12 +21,16 @@ class Command(BaseCommand):
         except (TypeError, ValueError):
             return None
 
-    def get_use(self, name):
-        if not name:
+    def get_use(self, actual_use=None, accessible='t', is_vacant='t', **kwargs):
+        if not actual_use and not is_vacant == 't':
+            actual_use = 'generic use: not vacant'
+        if not actual_use and not accessible == 't':
+            actual_use = 'gutterspace'
+        if not actual_use:
             return None
         try:
             return Use.objects.get_or_create(
-                name=name,
+                name=actual_use,
                 visible=False,
             )[0]
         except Exception:
@@ -75,12 +79,13 @@ class Command(BaseCommand):
                 postal_code=lot['zipcode'],
                 centroid=self.get_centroid(lot['centroid']),
                 polygon=polygon,
-                known_use=self.get_use(lot['actual_use']),
+                known_use=self.get_use(**lot),
                 known_use_certainty=9,
                 known_use_locked=True,
                 accessible=lot['accessible'] == 't',
                 name=lot['name'],
                 parcel=parcel,
+                added_reason='Imported from 596 Acres Classic',
             )
             newlot.save()
 
