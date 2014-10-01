@@ -1,5 +1,5 @@
 #
-# Load owners exported from original database
+# Load owners and default owner contacts exported from original database
 #
 import csv
 
@@ -13,12 +13,16 @@ class Command(BaseCommand):
     args = 'filename'
     help = 'Loads NYC owners exported from original database'
 
-    def get_owner_contact(self, owner=None, name=None, **defaults):
+    def get_owner_contact(self, owner=None, site=None, **kwargs):
+        defaults = { k: kwargs[k] for k in ('phone', 'email', 'notes') }
+        defaults['url'] = site
         try:
-            defaults = { k: defaults[k] for k in ('phone', 'email', 'notes') }
-            return OwnerContact.objects.get_or_create(name=name, owner=owner,
-                                                      defaults=defaults)[0]
-        except Exception:
+            return OwnerContact.objects.get_or_create(
+                name=kwargs['person'] or owner.name,
+                owner=owner,
+                defaults=defaults
+            )[0]
+        except ValueError:
             return None
 
     def get_owner(self, name=None, type=None, **kwargs):
@@ -39,7 +43,7 @@ class Command(BaseCommand):
                 lot = Lot.objects.get(bbl=row['bbl'])
                 print row
                 lot.owner = self.get_owner(**row)
-                lot.owner_contact = self.get_owner_contact(**row)
+                lot.owner_contact = self.get_owner_contact(owner=lot.owner, **row)
                 lot.save()
             except Lot.DoesNotExist:
                 continue
