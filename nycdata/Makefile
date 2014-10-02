@@ -37,11 +37,11 @@ download_pluto:
 	unzip raw/MapPLUTO/Staten_Island.zip -d raw/MapPLUTO/Staten_Island
 
 process_parcels: prepare_processed
-	ogr2ogr -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Bronx.shp raw/MapPLUTO/Bronx/Bronx/BXMapPLUTO.shp
-	ogr2ogr -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Brooklyn.shp raw/MapPLUTO/Brooklyn/Brooklyn/BKMapPLUTO.shp
-	ogr2ogr -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Manhattan.shp raw/MapPLUTO/Manhattan/Manhattan/MNMapPLUTO.shp
-	ogr2ogr -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Queens.shp raw/MapPLUTO/Queens/Queens/QNMapPLUTO.shp
-	ogr2ogr -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Staten_Island.shp raw/MapPLUTO/Staten_Island/Staten_Island/SIMapPLUTO.shp
+	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Bronx.shp raw/MapPLUTO/Bronx/Bronx/BXMapPLUTO.shp
+	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Brooklyn.shp raw/MapPLUTO/Brooklyn/Brooklyn/BKMapPLUTO.shp
+	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Manhattan.shp raw/MapPLUTO/Manhattan/Manhattan/MNMapPLUTO.shp
+	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Queens.shp raw/MapPLUTO/Queens/Queens/QNMapPLUTO.shp
+	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Staten_Island.shp raw/MapPLUTO/Staten_Island/Staten_Island/SIMapPLUTO.shp
 
 import_parcels:
 	shp2pgsql -D -c -I processed/parcels/parcels.shp parcels | psql -d nola
