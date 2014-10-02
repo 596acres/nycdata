@@ -28,10 +28,15 @@ class Command(BaseCommand):
                 lot_group.add(lot)
             except Lot.DoesNotExist:
                 # Else create a lotgroup, add both to it
-                lot_group = LotGroup(**Lot.objects.filter(pk=parent_lot.pk).values()[0])
+                lot_group = LotGroup(**{
+                    'address_line1': parent_lot.address_line1,
+                    'borough': parent_lot.borough,
+                    'known_use': parent_lot.known_use,
+                    'name': parent_lot.name,
+                    'postal_code': parent_lot.postal_code,
+                })
                 lot_group.save()
-                lot_group.add(lot)
-                lot_group.add(parent_lot)
+                lot_group.update(lots=(parent_lot, lot))
 
     def handle(self, filename, *args, **options):
         self.load_lot_groups(open(filename, 'r'))

@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
 
 from livinglots_usercontent.notes.models import Note
-from lots.models import Lot
+from lots.models import Lot, LotGroup
 
 
 class Command(BaseCommand):
@@ -18,9 +18,14 @@ class Command(BaseCommand):
         for row in csv.DictReader(notes_file):
             print row
             try:
-                lot = Lot.objects.get(bbl=row['bbl'])
+                try:
+                    lot = LotGroup.objects.get(lot__bbl=row['bbl'])
+                except LotGroup.DoesNotExist:
+                    lot = Lot.objects.get(bbl=row['bbl'])
                 fields = {
-                    'content_type': ContentType.objects.get_for_model(lot),
+                    # Explicitly add to the Lot object rather than the
+                    # LotGroup
+                    'content_type': ContentType.objects.get_for_model(Lot),
                     'object_id': lot.pk,
                     'text': row['text'],
                     'added_by_name': row['added_by_name'],

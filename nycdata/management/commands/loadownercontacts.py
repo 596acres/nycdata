@@ -5,7 +5,7 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from lots.models import Lot
+from lots.models import Lot, LotGroup
 from owners.models import OwnerContact
 
 
@@ -21,7 +21,10 @@ class Command(BaseCommand):
     def load_ownercontacts(self, ownercontacts_file):
         for row in csv.DictReader(ownercontacts_file):
             try:
-                lot = Lot.objects.get(bbl=row['bbl'])
+                try:
+                    lot = LotGroup.objects.get(lot__bbl=row['bbl'])
+                except LotGroup.DoesNotExist:
+                    lot = Lot.objects.get(bbl=row['bbl'])
                 print row
                 lot.owner_contact = self.get_owner_contact(owner=lot.owner, **row)
                 lot.save()
