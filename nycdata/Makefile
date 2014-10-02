@@ -42,6 +42,3 @@ process_parcels: prepare_processed
 	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Manhattan.shp raw/MapPLUTO/Manhattan/Manhattan/MNMapPLUTO.shp
 	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Queens.shp raw/MapPLUTO/Queens/Queens/QNMapPLUTO.shp
 	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Staten_Island.shp raw/MapPLUTO/Staten_Island/Staten_Island/SIMapPLUTO.shp
-
-import_parcels:
-	shp2pgsql -D -c -I processed/parcels/parcels.shp parcels | psql -d nola
