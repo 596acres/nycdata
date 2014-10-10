@@ -40,7 +40,7 @@ class Command(BaseCommand):
 
     def get_use(self):
         return Use.objects.get_or_create(
-            name='garden',
+            name='community green space',
             visible=True,
         )[0]
 
