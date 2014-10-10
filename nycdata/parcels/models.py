@@ -79,7 +79,7 @@ class Parcel(models.Model):
     commfar = models.FloatField()
     facilfar = models.FloatField()
     borocode = models.IntegerField()
-    bbl = models.DecimalField(max_digits=10, decimal_places=0)
+    bbl = models.DecimalField(max_digits=10, decimal_places=0, db_index=True)
     condono = models.IntegerField()
     tract2010 = models.CharField(max_length=6)
     xcoord = models.IntegerField()
