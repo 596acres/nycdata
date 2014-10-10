@@ -38,5 +38,10 @@ class Command(BaseCommand):
                 lot_group.save()
                 lot_group.update(lots=(parent_lot, lot))
 
+                # Assume previous lot had the group's name, not its own name.
+                # Delete since the group now has it.
+                parent_lot.name = None
+                parent_lot.save()
+
     def handle(self, filename, *args, **options):
         self.load_lot_groups(open(filename, 'r'))
