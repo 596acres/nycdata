@@ -48,13 +48,15 @@ class Command(BaseCommand):
         return name
 
     def get_parcel(self, bbl=None, centroid=None, **kwargs):
-        # Try to get by geom, then get by bbl
+        """
+        Try to get a parcel by BBL, otherwise get it by centroid.
+        """
         try:
+            return Parcel.objects.get(bbl=bbl)
+        except Parcel.DoesNotExist:
             return Parcel.objects.get(geom__contains=centroid)
         except Parcel.MultipleObjectsReturned:
             return Parcel.objects.get(geom__contains=centroid, bbl=bbl)
-        except (ValueError, Parcel.DoesNotExist):
-            return Parcel.objects.get(bbl=bbl)
 
     def add_steward_project(self, lot, actual_use=None):
         """
