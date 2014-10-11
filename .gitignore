@@ -6,5 +6,5 @@ noladata/processed/parcels
 noladata/processed/zipcodes
 noladata/processed/zoning
 raw
-.*.swp
+.*.sw[op]
 *.pyc
