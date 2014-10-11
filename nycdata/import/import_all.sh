@@ -13,3 +13,5 @@ django-admin loadnotes $DATA_DIR/notes.csv
 django-admin loadpictures $DATA_DIR/pictures.csv $DATA_DIR/pictures.tar.gz
 django-admin loadorganizers $DATA_DIR/organizers.csv
 django-admin loadwatchers $DATA_DIR/watchers.csv
+
+django-admin finishlots
