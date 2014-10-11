@@ -9,6 +9,8 @@ from django.db.models import Count
 from lots.models import Lot
 from owners.models import Owner, OwnerContact
 
+from nycdata.imports.utils import get_lot
+
 
 class Command(BaseCommand):
     args = 'filename'
@@ -41,7 +43,7 @@ class Command(BaseCommand):
     def load_owners(self, owners_file):
         for row in csv.DictReader(owners_file):
             try:
-                lot = Lot.objects.get(bbl=row['bbl'])
+                lot = get_lot(row['bbl'])
                 print row
                 lot.owner = self.get_owner(**row)
                 lot.owner_contact = self.get_owner_contact(owner=lot.owner, **row)
@@ -59,5 +61,7 @@ class Command(BaseCommand):
             owner.save()
 
     def handle(self, filename, *args, **options):
+        print '\n\nLoading owners...'
         self.load_owners(open(filename, 'r'))
+        print '\n\nCreating default ownercontacts...'
         self.make_default_owner_contacts()

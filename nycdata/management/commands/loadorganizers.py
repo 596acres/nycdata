@@ -7,8 +7,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
 
 from livinglots_organize.models import OrganizerType
-from lots.models import Lot, LotGroup
+from lots.models import Lot
 from organize.models import Organizer
+
+from nycdata.imports.utils import get_lot
 
 
 class Command(BaseCommand):
@@ -41,10 +43,7 @@ class Command(BaseCommand):
         for row in csv.DictReader(organizers_file):
             print row
             try:
-                try:
-                    lot = LotGroup.objects.get(lot__bbl=row['bbl'])
-                except LotGroup.DoesNotExist:
-                    lot = Lot.objects.get(bbl=row['bbl'])
+                lot = get_lot(row['bbl'])
                 self.add_organizer(lot, **row)
             except Lot.DoesNotExist:
                 print "Couldn't find lot, skipping"

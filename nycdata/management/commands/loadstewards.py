@@ -8,9 +8,11 @@ from django.core.management.base import BaseCommand
 
 from livinglots_lots.models import Use
 from livinglots_organize.models import OrganizerType
-from lots.models import Lot, LotGroup
+from lots.models import Lot
 from organize.models import Organizer
 from steward.models import StewardProject
+
+from nycdata.imports.utils import get_lot
 
 
 class Command(BaseCommand):
@@ -62,10 +64,7 @@ class Command(BaseCommand):
         for row in csv.DictReader(steward_file):
             print row
             try:
-                try:
-                    lot = LotGroup.objects.get(lot__bbl=row['bbl'])
-                except LotGroup.DoesNotExist:
-                    lot = Lot.objects.get(bbl=row['bbl'])
+                lot = get_lot(row['bbl'])
                 lot.known_use = self.get_use()
                 lot.known_use_certainty = 10
                 lot.known_use_locked = True

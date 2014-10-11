@@ -5,8 +5,10 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from lots.models import Lot, LotGroup
+from lots.models import Lot
 from owners.models import OwnerContact
+
+from nycdata.imports.utils import get_lot
 
 
 class Command(BaseCommand):
@@ -21,15 +23,18 @@ class Command(BaseCommand):
     def load_ownercontacts(self, ownercontacts_file):
         for row in csv.DictReader(ownercontacts_file):
             try:
-                try:
-                    lot = LotGroup.objects.get(lot__bbl=row['bbl'])
-                except LotGroup.DoesNotExist:
-                    lot = Lot.objects.get(bbl=row['bbl'])
-                print row
+                lot = get_lot(row['bbl'])
+                #print row
                 lot.owner_contact = self.get_owner_contact(owner=lot.owner, **row)
                 lot.save()
             except Lot.DoesNotExist:
+                print '*** Could not find lot %s' % row['bbl']
                 continue
+            except Exception:
+                print '*** Error adding %s' % row['bbl']
+                import traceback
+                traceback.print_exc()
 
     def handle(self, filename, *args, **options):
+        print '\n\nLoading ownercontacts...'
         self.load_ownercontacts(open(filename, 'r'))
