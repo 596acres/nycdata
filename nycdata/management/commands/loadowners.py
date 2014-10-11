@@ -4,6 +4,7 @@
 import csv
 
 from django.core.management.base import BaseCommand
+from django.db.models import Count
 
 from lots.models import Lot
 from owners.models import Owner, OwnerContact
@@ -48,5 +49,15 @@ class Command(BaseCommand):
             except Lot.DoesNotExist:
                 continue
 
+    def make_default_owner_contacts(self):
+        for owner in Owner.objects.all():
+            most_used_contact = Lot.objects.filter(owner=owner) \
+                    .values('owner_contact__pk') \
+                    .annotate(oc_count=Count('pk')) \
+                    .order_by('oc_count')[0]['owner_contact__pk']
+            owner.default_contact = OwnerContact.objects.get(pk=most_used_contact)
+            owner.save()
+
     def handle(self, filename, *args, **options):
         self.load_owners(open(filename, 'r'))
+        self.make_default_owner_contacts()
