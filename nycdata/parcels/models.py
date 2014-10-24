@@ -10,6 +10,15 @@ from django.contrib.gis.db import models
 # The only modification is that the bbl field was changed to DecimalField since
 # bbls are too large for IntegerField.
 
+boroughs = {
+    'BX': 'Bronx',
+    'BK': 'Brooklyn',
+    'MN': 'Manhattan',
+    'QN': 'Queens',
+    'SI': 'Staten Island',
+}
+
+
 class Parcel(models.Model):
     borough = models.CharField(max_length=2)
     block = models.IntegerField()
@@ -101,6 +110,10 @@ class Parcel(models.Model):
 
     def __unicode__(self):
         return str(self.bbl)
+
+    def _borough_name(self):
+        return boroughs[self.borough]
+    borough_name = property(_borough_name)
 
 
 # Auto-generated `LayerMapping` dictionary for Parcel model
