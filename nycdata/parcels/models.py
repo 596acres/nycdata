@@ -13,7 +13,7 @@ from django.contrib.gis.db import models
 class Parcel(models.Model):
     borough = models.CharField(max_length=2)
     block = models.IntegerField()
-    lot = models.IntegerField()
+    lot_number = models.IntegerField()
     cd = models.IntegerField()
     ct2010 = models.CharField(max_length=7)
     cb2010 = models.CharField(max_length=5)
@@ -107,7 +107,7 @@ class Parcel(models.Model):
 parcel_mapping = {
     'borough' : 'Borough',
     'block' : 'Block',
-    'lot' : 'Lot',
+    'lot_number' : 'Lot',
     'cd' : 'CD',
     'ct2010' : 'CT2010',
     'cb2010' : 'CB2010',
