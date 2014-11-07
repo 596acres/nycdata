@@ -27,13 +27,18 @@ class Command(BaseCommand):
         visible = False
         if not actual_use and not is_vacant == 't':
             actual_use = 'generic use: not vacant'
-        if not actual_use and not accessible == 't':
-            actual_use = 'gutterspace'
         if not actual_use:
             return None
         if actual_use.startswith('Garden'):
             actual_use = 'community garden'
             visible = True
+
+        # Gutterspace
+        if not actual_use and not accessible == 't':
+            return None
+        if actual_use.lower().startswith('gutterspace'):
+            return None
+
         try:
             return Use.objects.get_or_create(
                 name=actual_use,
@@ -117,12 +122,19 @@ class Command(BaseCommand):
         lots = csv.DictReader(lots_file)
 
         for lot in lots:
+            actual_use = lot['actual_use']
             centroid = self.get_centroid(lot['centroid'])
             parcel = None
             polygon = None
+            gutterspace = False
 
             if not centroid:
                 continue
+
+            if not actual_use and not lot['accessible'] == 't':
+                gutterspace = True
+            if actual_use.lower().startswith('gutterspace'):
+                gutterspace = True
 
             try:
                 parcel = self.get_parcel(centroid=centroid, bbl=lot['bbl'])
@@ -154,10 +166,11 @@ class Command(BaseCommand):
                 name=self.get_name(**lot),
                 parcel=parcel,
                 added_reason='Imported from 596 Acres Classic',
+                gutterspace=gutterspace,
             )
             newlot.save()
 
-            if lot['actual_use'].startswith('Garden'):
+            if actual_use.startswith('Garden'):
                 self.add_steward_project(newlot, actual_use=lot['actual_use'])
 
     def handle(self, filename, *args, **options):
