@@ -72,7 +72,7 @@ class Command(BaseCommand):
             added_reason='Created for duplicate lots during import',
             bbl=None, # Another lot might be using this bbl, handle it later
             block=parcel.block,
-            lot_number=parcel.lot,
+            lot_number=parcel.lot_number,
 
             borough=borough,
             owner=owner,
