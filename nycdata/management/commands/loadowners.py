@@ -15,6 +15,7 @@ from nycdata.imports.utils import get_lot
 class Command(BaseCommand):
     args = 'filename'
     help = 'Loads NYC owners exported from original database'
+    private_opted_in_owners = ('New York City Transit (MTA)',)
 
     def get_owner_contact(self, owner=None, site=None, **kwargs):
         defaults = { k: kwargs[k] for k in ('phone', 'email', 'notes') }
@@ -34,6 +35,8 @@ class Command(BaseCommand):
                 type = 'public'
             else:
                 type = 'private'
+            if name in self.private_opted_in_owners:
+                type = 'private'
             return Owner.objects.get_or_create(name=name, defaults={
                 'owner_type': type,
             })[0]
@@ -47,6 +50,8 @@ class Command(BaseCommand):
                 print row
                 lot.owner = self.get_owner(**row)
                 lot.owner_contact = self.get_owner_contact(owner=lot.owner, **row)
+                if lot.owner.name in self.private_opted_in_owners:
+                    lot.owner_opt_in = True
                 lot.save()
             except Lot.DoesNotExist:
                 continue
