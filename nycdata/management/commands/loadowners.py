@@ -50,7 +50,7 @@ class Command(BaseCommand):
                 print row
                 lot.owner = self.get_owner(**row)
                 lot.owner_contact = self.get_owner_contact(owner=lot.owner, **row)
-                if lot.owner.name in self.private_opted_in_owners:
+                if not lot.known_use and lot.owner.name in self.private_opted_in_owners:
                     lot.owner_opt_in = True
                 lot.save()
             except Lot.DoesNotExist:
