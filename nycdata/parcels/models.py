@@ -115,6 +115,14 @@ class Parcel(models.Model):
         return boroughs[self.borough]
     borough_name = property(_borough_name)
 
+    def bldgclass_vacant(self):
+        """Does this parcel have a vacant building class?"""
+        return self.bldgclass.lower().startswith('v')
+
+    def landuse_vacant(self):
+        """Does this parcel have a vacant landuse?"""
+        return self.landuse == '11'
+
 
 # Auto-generated `LayerMapping` dictionary for Parcel model
 parcel_mapping = {
