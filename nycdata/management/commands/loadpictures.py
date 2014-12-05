@@ -36,6 +36,7 @@ class Command(BaseCommand):
                 photo = Photo(**fields)
                 photo.save()
 
+                photo.action_object_actions.update(timestamp=row['added'])
                 Photo.objects.filter(pk=photo.pk).update(added=row['added'])
             except Lot.DoesNotExist:
                 print "Couldn't find lot, skipping"

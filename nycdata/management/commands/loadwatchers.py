@@ -33,6 +33,7 @@ class Command(BaseCommand):
             defaults=defaults,
         )[0]
 
+        organizer.action_object_actions.update(timestamp=added)
         Organizer.objects.filter(pk=organizer.pk).update(added=added)
         return organizer
 

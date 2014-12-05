@@ -32,6 +32,7 @@ class Command(BaseCommand):
                 note = Note(**fields)
                 note.save()
 
+                note.action_object_actions.update(timestamp=row['added'])
                 Note.objects.filter(pk=note.pk).update(added=row['added'])
             except Lot.DoesNotExist:
                 print "Couldn't find lot, skipping"
