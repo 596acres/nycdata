@@ -20,7 +20,7 @@ class Command(BaseCommand):
     def add_organizer(self, lot, added=None, **kwargs):
         type = OrganizerType.objects.get_or_create(
             name=kwargs['type'],
-            is_group=kwargs['is_group'],
+            is_group=(kwargs['is_group'] == 't'),
         )[0]
 
         organizer_fields = ('phone', 'email', 'email_hash', 'notes', 'url',
