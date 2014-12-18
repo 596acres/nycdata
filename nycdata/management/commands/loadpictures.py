@@ -61,5 +61,5 @@ class Command(BaseCommand):
         subprocess.call(untar_cmd, shell=True)
 
     def handle(self, filename, archive_filename, *args, **options):
-        #self.load_pictures(open(filename, 'r'))
+        self.load_pictures(open(filename, 'r'))
         self.move_picture_files(archive_filename)
