@@ -34,7 +34,8 @@ class Command(BaseCommand):
         if len(boroughs) == 1:
             borough = boroughs[0]
         else:
-            print "\t * Couldn't pick a borough", boroughs
+            print "\t * Couldn't pick a borough", boroughs, lots
+            raise Exception("Not able to pick borough, something's weird!")
 
         owners = list(set([l.owner for l in lots]))
         if len(owners) == 1:
@@ -130,7 +131,11 @@ class Command(BaseCommand):
         for parcel_bbl in [d['parcel__bbl'] for d in dupes]:
             parcel = Parcel.objects.get(bbl=parcel_bbl)
             lots = Lot.objects.filter(parcel__bbl=parcel_bbl)
-            newlot = self.create_new_lot(parcel, lots)
+
+            try:
+                newlot = self.create_new_lot(parcel, lots)
+            except Exception:
+                continue
 
             print 'Consolidating', [l.bbl for l in lots], 'into', parcel
 
