@@ -1,3 +1,7 @@
+#!/bin/bash
+set -e
+set -o errexit
+
 DATA_DIR=../raw/
 DB_NAME=llnyc
 DB_USER=llnyc
