@@ -171,7 +171,11 @@ class Command(BaseCommand):
             newlot.save()
 
             if actual_use.startswith('Garden'):
-                self.add_steward_project(newlot, actual_use=lot['actual_use'])
+                try:
+                    self.add_steward_project(newlot, actual_use=lot['actual_use'])
+                except ValueError:
+                    print "Couldn't add steward project for lot:", newlot, actual_use
+                    continue
 
     def handle(self, filename, *args, **options):
         self.load_lots(open(filename, 'r'))
