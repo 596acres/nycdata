@@ -6,7 +6,7 @@ from ..boroughs import get_borough_number
 int_regex = re.compile(r'\D*(\d+)\D*')
 
 
-def _get_int(value):
+def get_int(value):
     try:
         return int(value)
     except ValueError:
@@ -26,4 +26,4 @@ def build_bbl(borough, block, lot):
     except ValueError:
         borough = get_borough_number(borough)
 
-    return '%d%05d%04d' % (borough, _get_int(block), _get_int(lot))
+    return '%d%05d%04d' % (borough, get_int(block), get_int(lot))
