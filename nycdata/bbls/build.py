@@ -10,8 +10,11 @@ def get_int(value):
     try:
         return int(value)
     except ValueError:
-        # Try to just get digits
-        return int(re.match(int_regex, value).group(1))
+        try:
+            # Try to just get digits
+            return int(re.match(int_regex, value).group(1))
+        except AttributeError:
+            return None
 
 
 def build_bbl(borough, block, lot):
@@ -26,4 +29,7 @@ def build_bbl(borough, block, lot):
     except ValueError:
         borough = get_borough_number(borough)
 
-    return '%d%05d%04d' % (borough, get_int(block), get_int(lot))
+    try:
+        return '%d%05d%04d' % (borough, get_int(block), get_int(lot))
+    except TypeError:
+        return None
