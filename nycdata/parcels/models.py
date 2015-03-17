@@ -1,4 +1,7 @@
 from django.contrib.gis.db import models
+from django.contrib.gis.db.models.query import GeoQuerySet
+
+from ..bbls import build_bbl
 
 
 # This is an auto-generated Django model module created by ogrinspect using the
@@ -17,6 +20,24 @@ boroughs = {
     'QN': 'Queens',
     'SI': 'Staten Island',
 }
+
+
+class ParcelQuerySet(GeoQuerySet):
+
+    def with_bbl(self, bbl=None, borough=None, block=None, lot=None):
+        """Filter by bbl, creating one first if not provided."""
+        if not bbl:
+            bbl = build_bbl(borough, block, lot)
+        return self.filter(bbl=bbl)
+
+
+class ParcelManager(models.GeoManager):
+
+    def get_queryset(self):
+        return ParcelQuerySet(self.model, using=self._db)
+
+    def with_bbl(self, **kwargs):
+        return self.get_queryset().with_bbl(**kwargs)
 
 
 class Parcel(models.Model):
@@ -106,7 +127,7 @@ class Parcel(models.Model):
     shape_leng = models.FloatField()
     shape_area = models.FloatField()
     geom = models.MultiPolygonField(srid=4326)
-    objects = models.GeoManager()
+    objects = ParcelManager()
 
     def __unicode__(self):
         return str(self.bbl)
