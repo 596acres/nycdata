@@ -27,7 +27,6 @@ class Command(BaseCommand):
             self.load_city_council_member(row)
 
     def load_city_council_member(self, row):
-        """Create a lot using a feature from the SAVI shapefile."""
         district_number = self.parse_district_number(row['district'])
         try:
             district = Boundary.objects.get(
