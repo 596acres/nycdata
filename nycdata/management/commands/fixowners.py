@@ -45,13 +45,16 @@ class Command(BaseCommand):
                 self.record_action(lot, current_owner, old_owner, 'owners matched, skipped')
                 continue
 
-            take_old = raw_input('(%s|%d) Current: %s, old: %s. Use old? (Y/n) ' % (
+            answer = raw_input('(%s|%d) Current: %s, old: %s. Use old? (Y/n/a) ' % (
                 lot.bbl,
                 lot.pk,
                 current_owner,
                 old_owner,
             ))
-            if take_old == '' or take_old.lower() == 'y':
+            if answer.lower() == 'a':
+                current_owner.make_alias(old_owner)
+                continue
+            if answer == '' or answer.lower() == 'y':
                 lot.owner = old_owner
                 lot.save()
 
