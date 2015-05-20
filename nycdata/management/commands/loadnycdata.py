@@ -10,6 +10,7 @@ class Command(BaseCommand):
 
     datasets = {
         'parcels': 'nycdata.parcels',
+        'urbanrenewal': 'nycdata.urbanrenewal',
     }
 
     def handle(self, dataset_name, *args, **options):
