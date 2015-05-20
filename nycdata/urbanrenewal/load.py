@@ -23,7 +23,6 @@ def from_github(verbose=False, **kwargs):
     """
     # Download latest GeoJSON 
     urban_renewal_parcels = requests.get(urban_reviewer_data_url).json()['features']
-    print urban_renewal_parcels[0]
 
     for urban_renewal_parcel in urban_renewal_parcels:
         add_urban_renewal_record(urban_renewal_parcel)
