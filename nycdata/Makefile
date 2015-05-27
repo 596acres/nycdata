@@ -5,6 +5,7 @@ clean: clean_db clean_processed clean_raw
 
 prepare_processed:
 	mkdir -p processed
+	mkdir -p processed/nycha
 	mkdir -p processed/parcels
 
 clean_processed:
@@ -42,3 +43,11 @@ process_parcels: prepare_processed
 	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Manhattan.shp raw/MapPLUTO/Manhattan/Manhattan/MNMapPLUTO.shp
 	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Queens.shp raw/MapPLUTO/Queens/Queens/QNMapPLUTO.shp
 	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Staten_Island.shp raw/MapPLUTO/Staten_Island/Staten_Island/SIMapPLUTO.shp
+
+download_nycha:
+	mkdir -p raw/nycha
+	curl -L "https://data.cityofnewyork.us/api/geospatial/i9rv-hdr5?method=export&format=Shapefile" -o raw/nycha/nycha.zip
+	unzip raw/nycha/nycha.zip -d raw/nycha
+
+process_nycha: prepare_processed
+	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/nycha/nycha.shp raw/nycha/NYCHA_developments_July2011.shp
