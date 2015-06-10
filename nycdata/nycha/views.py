@@ -3,6 +3,8 @@ import json
 
 from inplace.views import GeoJSONListView
 
+from lots.models import Lot
+
 from .models import NYCHADevelopment
 
 
@@ -20,4 +22,9 @@ class NYCHAGeoJSONListView(GeoJSONListView):
         return {
             'id': place.pk,
             'name': place.name,
+            'lots_within': Lot.objects.filter(centroid__within=place.geom).count(),
+            'projects_within': Lot.objects.filter(
+                known_use__visible=True,
+                centroid__within=place.geom
+            ).count(),
         }
