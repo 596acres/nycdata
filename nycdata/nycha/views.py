@@ -22,8 +22,8 @@ class NYCHAGeoJSONListView(GeoJSONListView):
         return {
             'id': place.pk,
             'name': place.name,
-            'lots_within': Lot.objects.filter(centroid__within=place.geom).count(),
-            'projects_within': Lot.objects.filter(
+            'lots_within': Lot.visible.filter(centroid__within=place.geom).count(),
+            'projects_within': Lot.visible.filter(
                 known_use__visible=True,
                 centroid__within=place.geom
             ).count(),
