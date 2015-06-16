@@ -19,6 +19,13 @@ class NYCHAGeoJSONListView(GeoJSONListView):
         )
 
     def get_properties(self, place):
+        try:
+            # XXX This appears to be a django-cachalot bug--all the counts came
+            # back as 0 before invalidating
+            from cachalot.api import invalidate_models
+            invalidate_models([Lot,])
+        except ImportError:
+            pass
         return {
             'id': place.pk,
             'name': place.name,
