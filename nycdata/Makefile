@@ -26,23 +26,23 @@ download_data:
 
 download_pluto:
 	mkdir -p raw/MapPLUTO
-	curl -L "http://www.nyc.gov/html/dcp/download/bytes/bx_mappluto_14v1.zip" -o raw/MapPLUTO/Bronx.zip
+	curl -L "http://www1.nyc.gov/assets/planning/download/zip/data-maps/open-data/bx_mappluto_16v1.zip" -o raw/MapPLUTO/Bronx.zip
 	unzip raw/MapPLUTO/Bronx.zip -d raw/MapPLUTO/Bronx
-	curl -L "http://www.nyc.gov/html/dcp/download/bytes/bk_mappluto_14v1.zip" -o raw/MapPLUTO/Brooklyn.zip
+	curl -L "http://www1.nyc.gov/assets/planning/download/zip/data-maps/open-data/bk_mappluto_16v1.zip" -o raw/MapPLUTO/Brooklyn.zip
 	unzip raw/MapPLUTO/Brooklyn.zip -d raw/MapPLUTO/Brooklyn
-	curl -L "http://www.nyc.gov/html/dcp/download/bytes/mn_mappluto_14v1.zip" -o raw/MapPLUTO/Manhattan.zip
+	curl -L "http://www1.nyc.gov/assets/planning/download/zip/data-maps/open-data/mn_mappluto_16v1.zip" -o raw/MapPLUTO/Manhattan.zip
 	unzip raw/MapPLUTO/Manhattan.zip -d raw/MapPLUTO/Manhattan
-	curl -L "http://www.nyc.gov/html/dcp/download/bytes/qn_mappluto_14v1.zip" -o raw/MapPLUTO/Queens.zip
+	curl -L "http://www1.nyc.gov/assets/planning/download/zip/data-maps/open-data/qn_mappluto_16v1.zip" -o raw/MapPLUTO/Queens.zip
 	unzip raw/MapPLUTO/Queens.zip -d raw/MapPLUTO/Queens
-	curl -L "http://www.nyc.gov/html/dcp/download/bytes/si_mappluto_14v1.zip" -o raw/MapPLUTO/Staten_Island.zip
+	curl -L "http://www1.nyc.gov/assets/planning/download/zip/data-maps/open-data/si_mappluto_16v1.zip" -o raw/MapPLUTO/Staten_Island.zip
 	unzip raw/MapPLUTO/Staten_Island.zip -d raw/MapPLUTO/Staten_Island
 
 process_parcels: prepare_processed
-	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Bronx.shp raw/MapPLUTO/Bronx/Bronx/BXMapPLUTO.shp
-	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Brooklyn.shp raw/MapPLUTO/Brooklyn/Brooklyn/BKMapPLUTO.shp
-	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Manhattan.shp raw/MapPLUTO/Manhattan/Manhattan/MNMapPLUTO.shp
-	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Queens.shp raw/MapPLUTO/Queens/Queens/QNMapPLUTO.shp
-	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Staten_Island.shp raw/MapPLUTO/Staten_Island/Staten_Island/SIMapPLUTO.shp
+	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Bronx.shp raw/MapPLUTO/Bronx/BXMapPLUTO.shp
+	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Brooklyn.shp raw/MapPLUTO/Brooklyn/BKMapPLUTO.shp
+	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Manhattan.shp raw/MapPLUTO/Manhattan/MNMapPLUTO.shp
+	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Queens.shp raw/MapPLUTO/Queens/QNMapPLUTO.shp
+	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/parcels/Staten_Island.shp raw/MapPLUTO/Staten_Island/SIMapPLUTO.shp
 
 download_nycha:
 	mkdir -p raw/nycha
