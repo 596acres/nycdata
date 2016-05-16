@@ -11,6 +11,7 @@ class Command(BaseCommand):
     datasets = {
         'nycha': 'nycdata.nycha',
         'parcels': 'nycdata.parcels',
+        'postoffices': 'nycdata.postoffices',
         'urbanrenewal': 'nycdata.urbanrenewal',
     }
 

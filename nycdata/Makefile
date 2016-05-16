@@ -7,6 +7,7 @@ prepare_processed:
 	mkdir -p processed
 	mkdir -p processed/nycha
 	mkdir -p processed/parcels
+	mkdir -p processed/postoffices
 
 clean_processed:
 	rm -rf processed/parcels
@@ -51,3 +52,11 @@ download_nycha:
 
 process_nycha: prepare_processed
 	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/nycha/nycha.shp raw/nycha/NYCHA_developments_July2011.shp
+
+download_postoffices:
+	mkdir -p raw/postoffices
+	curl -L "https://data.cityofnewyork.us/api/geospatial/gpxw-bq7a?method=export&format=Shapefile" -o raw/postoffices/postoffices.zip
+	unzip raw/postoffices/postoffices.zip -d raw/postoffices
+
+process_postoffices: prepare_processed
+	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/postoffices/postoffices.shp $(wildcard raw/postoffices/*.shp)
