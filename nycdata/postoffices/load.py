@@ -2,6 +2,8 @@ import os
 
 from django.contrib.gis.utils import LayerMapping
 
+from livinglots_lots.exceptions import ParcelAlreadyInLot
+from lots.models import Lot
 from ..load import get_processed_data_file
 from ..parcels.models import Parcel
 from .models import PostOffice, postoffice_mapping
@@ -36,3 +38,16 @@ def from_shapefile(strict=True, progress=True, verbose=False, **kwargs):
         if parcel:
             post_office.parcel = parcel
             post_office.save()
+
+            try:
+                lot_kwargs = {
+                    'added_reason': 'Loaded with post office data',
+                    'city': post_office.city,
+                    'commons_content_object': post_office,
+                    'commons_type': 'post office',
+                    'name': post_office.name,
+                }
+                lot = Lot.objects.create_lot_for_parcel(parcel, **lot_kwargs)
+            except ParcelAlreadyInLot:
+                print '\tParcel %s already in a lot. Skipping.' % parcel
+                continue
