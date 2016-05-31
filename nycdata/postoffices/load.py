@@ -3,6 +3,7 @@ import os
 from django.contrib.gis.utils import LayerMapping
 
 from livinglots_lots.exceptions import ParcelAlreadyInLot
+from livinglots_lots.models import Use
 from lots.models import Lot
 from ..load import get_processed_data_file
 from ..parcels.models import Parcel
@@ -21,6 +22,11 @@ def from_shapefile(strict=True, progress=True, verbose=False, **kwargs):
     mapping = LayerMapping(PostOffice, shp, postoffice_mapping,
                            transform=False)
     mapping.save(strict=strict, progress=progress, verbose=verbose, **kwargs)
+
+    use = Use.objects.get_or_create(
+        name='post office',
+        visible=True,
+    )[0]
 
     # Add parcel to post office
     for post_office in PostOffice.objects.all():
@@ -45,7 +51,12 @@ def from_shapefile(strict=True, progress=True, verbose=False, **kwargs):
                     'city': post_office.city,
                     'commons_content_object': post_office,
                     'commons_type': 'post office',
+                    'country': 'USA',
                     'name': post_office.name,
+                    'known_use': use,
+                    'known_use_certainty': 8,
+                    'known_use_locked': True,
+                    'state_province': 'NY',
                 }
                 lot = Lot.objects.create_lot_for_parcel(parcel, **lot_kwargs)
             except ParcelAlreadyInLot:
