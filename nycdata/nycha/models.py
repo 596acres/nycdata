@@ -16,12 +16,12 @@ class NYCHADevelopment(models.Model):
 
 # Auto-generated `LayerMapping` dictionary for NYCHADevelopment model
 nychadevelopment_mapping = {
-    'name' : 'DEVELOPMEN',
-    'borough' : 'BOROUGH',
-    'tds_num' : 'TDS_NUM',
-    'nonresidential_buildings' : 'NONRES_BLD',
-    'residential_buildings' : 'RES_BLDG',
-    'units_in_2011' : 'CUR_UNIT11',
-    'population_in_2011' : 'TOT_POP11',
+    'name' : 'developmen',
+    'borough' : 'borough',
+    'tds_num' : 'tds_num',
+    'nonresidential_buildings' : 'nonres_bld',
+    'residential_buildings' : 'res_bldg',
+    'units_in_2011' : 'cur_unit11',
+    'population_in_2011' : 'tot_pop11',
     'geom' : 'MULTIPOLYGON',
 }
