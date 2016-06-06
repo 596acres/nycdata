@@ -9,6 +9,7 @@ class Command(BaseCommand):
     help = 'Loads NYC data (addresses, buildings, parcels, ...)'
 
     datasets = {
+        'libraries': 'nycdata.libraries',
         'nycha': 'nycdata.nycha',
         'parcels': 'nycdata.parcels',
         'postoffices': 'nycdata.postoffices',

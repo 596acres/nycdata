@@ -5,6 +5,7 @@ clean: clean_db clean_processed clean_raw
 
 prepare_processed:
 	mkdir -p processed
+	mkdir -p processed/libraries
 	mkdir -p processed/nycha
 	mkdir -p processed/parcels
 	mkdir -p processed/postoffices
@@ -60,3 +61,11 @@ download_postoffices:
 
 process_postoffices: prepare_processed
 	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/postoffices/postoffices.shp $(wildcard raw/postoffices/*.shp)
+
+download_libraries:
+	mkdir -p raw/libraries
+	curl -L "https://data.cityofnewyork.us/api/geospatial/p4pf-fyc4?method=export&format=Shapefile" -o raw/libraries/libraries.zip
+	unzip raw/libraries/libraries.zip -d raw/libraries
+
+process_libraries: prepare_processed
+	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/libraries/libraries.shp $(wildcard raw/libraries/*.shp)
