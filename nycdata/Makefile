@@ -52,7 +52,7 @@ download_nycha:
 	unzip raw/nycha/nycha.zip -d raw/nycha
 
 process_nycha: prepare_processed
-	ogr2ogr -f "ESRI Shapefile" -simplify 0.2 -t_srs EPSG:4326 -overwrite processed/nycha/nycha.shp raw/nycha/NYCHA_developments_July2011.shp
+	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/nycha/nycha.shp $(wildcard raw/nycha/*.shp)
 
 download_postoffices:
 	mkdir -p raw/postoffices
