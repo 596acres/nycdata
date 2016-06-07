@@ -4,6 +4,7 @@ from django.contrib.gis.utils import LayerMapping
 
 from livinglots_lots.models import Use
 from lots.models import Lot
+from owners.models import Owner
 from ..load import get_processed_data_file
 from .models import NYCHADevelopment, nychadevelopment_mapping
 
@@ -26,6 +27,10 @@ def from_shapefile(create_lots=True, strict=True, progress=True, verbose=False, 
 
 
 def create_lots_for_nycha():
+    owner = Owner.objects.get_or_create(
+        name='NYCHA',
+        defaults={ 'owner_type': 'public' },
+    )[0]
     use = Use.objects.get_or_create(
         name='NYCHA',
         visible=True,
@@ -45,6 +50,7 @@ def create_lots_for_nycha():
             'known_use': use,
             'known_use_certainty': 8,
             'known_use_locked': True,
+            'owner': owner,
             'state_province': 'NY',
         }
 
