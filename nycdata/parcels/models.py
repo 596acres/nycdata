@@ -127,6 +127,7 @@ class Parcel(models.Model):
     shape_leng = models.FloatField()
     shape_area = models.FloatField()
     geom = models.MultiPolygonField(srid=4326)
+    centroid = models.PointField(srid=4326, blank=True, null=True)
     objects = ParcelManager()
 
     def __unicode__(self):
