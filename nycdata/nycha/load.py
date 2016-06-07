@@ -1,5 +1,6 @@
 import os
 
+from django.contrib.gis.geos import MultiPolygon
 from django.contrib.gis.utils import LayerMapping
 
 from livinglots_lots.models import Use
@@ -57,4 +58,16 @@ def create_lots_for_nycha():
         # NB: NYCHA developments often span multiple parcels or portions of
         # parcels, so we add them as drawn geometries here rather than tie them
         # to particular parcels.
-        lot = Lot.objects.create_lot_for_geom(nycha_development.geom, **lot_kwargs)
+
+        # Some NYCHA developments span multiple small houses spread over various
+        # boroughs. Here we create separate lots for them since we are more 
+        # likely to think of them in terms of an individual home than the entire
+        # development. The development will still be available as the
+        # commons_content_object.
+        if nycha_development.borough == 'VARIOUS':
+            del lot_kwargs['borough']
+            del lot_kwargs['city']
+            for geom in nycha_development.geom:
+                Lot.objects.create_lot_for_geom(MultiPolygon(geom), **lot_kwargs)
+        else:
+            Lot.objects.create_lot_for_geom(nycha_development.geom, **lot_kwargs)
