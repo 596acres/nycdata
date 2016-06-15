@@ -56,6 +56,7 @@ def from_shapefile(strict=True, progress=True, verbose=False, **kwargs):
                     'known_use': use,
                     'known_use_certainty': 8,
                     'known_use_locked': True,
+                    'owner_opt_in': True,
                     'state_province': 'NY',
                 }
                 lot = Lot.objects.create_lot_for_parcel(parcel, **lot_kwargs)
