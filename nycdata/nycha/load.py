@@ -33,7 +33,7 @@ def create_lots_for_nycha():
         defaults={ 'owner_type': 'public' },
     )[0]
     use = Use.objects.get_or_create(
-        name='NYCHA',
+        name='public housing',
         visible=True,
     )[0]
 
@@ -45,7 +45,7 @@ def create_lots_for_nycha():
             'borough': nycha_development.borough.title(),
             'city': nycha_development.borough.title(),
             'commons_content_object': nycha_development,
-            'commons_type': 'NYCHA',
+            'commons_type': 'public housing',
             'country': 'USA',
             'name': nycha_development.name,
             'known_use': use,
