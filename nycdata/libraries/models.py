@@ -5,7 +5,6 @@ from django.contrib.gis.db import models
 class Library(models.Model):
     bbl = models.CharField(max_length=254)
     housenum = models.CharField(max_length=254)
-    borocode = models.FloatField()
     bin = models.FloatField()
     zip = models.CharField(max_length=254)
     city = models.CharField(max_length=254)
@@ -13,15 +12,16 @@ class Library(models.Model):
     system = models.CharField(max_length=254)
     url = models.URLField()
     streetname = models.CharField(max_length=254)
-    geom = models.PointField(srid=4326)
+    public = models.CharField(max_length=254, blank=True, null=True)
+    ownerfixed = models.CharField(max_length=254, blank=True, null=True)
+    geom = models.PolygonField(srid=4326)
     objects = models.GeoManager()
 
 
 # Auto-generated `LayerMapping` dictionary for Library model
 library_mapping = {
-    'bbl' : 'bbl',
+    'bbl' : 'bbl_string',
     'housenum' : 'housenum',
-    'borocode' : 'borocode',
     'bin' : 'bin',
     'zip' : 'zip',
     'city' : 'city',
@@ -29,5 +29,7 @@ library_mapping = {
     'system' : 'system',
     'url' : 'url',
     'streetname' : 'streetname',
-    'geom' : 'POINT',
+    'public' : 'public',
+    'ownerfixed' : 'OwnerFixed',
+    'geom' : 'POLYGON',
 }

@@ -5,6 +5,7 @@ from django.contrib.gis.utils import LayerMapping
 from livinglots_lots.exceptions import ParcelAlreadyInLot
 from livinglots_lots.models import Use
 from lots.models import Lot
+from owners.models import Owner
 from ..load import get_processed_data_file
 from ..parcels.models import Parcel
 from .models import Library, library_mapping
@@ -28,7 +29,7 @@ def from_shapefile(strict=True, progress=True, verbose=False, **kwargs):
     )[0]
 
     # Add parcel to library
-    for library in Library.objects.all():
+    for library in Library.objects.filter(public='yes'):
         parcel = None
         if library.bbl:
             try:
@@ -59,6 +60,20 @@ def from_shapefile(strict=True, progress=True, verbose=False, **kwargs):
                     'state_province': 'NY',
                 }
                 lot = Lot.objects.create_lot_for_parcel(parcel, **lot_kwargs)
+
+                if library.ownerfixed:
+                    # Don't trust owner from MapPLUTO, use the one in the download
+                    (owner, created) = Owner.objects.get_or_create(
+                        name=library.ownerfixed,
+                        defaults={
+                            'owner_type': 'public',
+                        },
+                        ignorecase=False
+                    )
+                    lot.owner = owner
+                    lot.save()
+                else:
+                    print 'could not find ownerfixed, using', lot.owner.name
             except ParcelAlreadyInLot:
                 print '\tParcel %s already in a lot. Skipping.' % parcel
                 continue

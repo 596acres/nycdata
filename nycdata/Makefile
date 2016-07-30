@@ -65,7 +65,7 @@ process_postoffices: prepare_processed
 
 download_libraries:
 	mkdir -p raw/libraries
-	curl -L "https://data.cityofnewyork.us/api/geospatial/p4pf-fyc4?method=export&format=Shapefile" -o raw/libraries/libraries.zip
+	curl -L "https://github.com/nycommons/nyc-libraries/raw/master/data/shp/nyc-libraries.zip" -o raw/libraries/libraries.zip
 	unzip raw/libraries/libraries.zip -d raw/libraries
 
 process_libraries: prepare_processed
