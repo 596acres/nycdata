@@ -43,6 +43,7 @@ process_parcels: prepare_processed
 	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/parcels/Bronx.shp raw/MapPLUTO/Bronx/BXMapPLUTO.shp
 	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/parcels/Brooklyn.shp raw/MapPLUTO/Brooklyn/BKMapPLUTO.shp
 	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/parcels/Manhattan.shp raw/MapPLUTO/Manhattan/MNMapPLUTO.shp
+	ogr2ogr -f "ESRI Shapefile" Queens_buffered.shp Queens.shp -dialect sqlite -overwrite -sql "select *, ST_Buffer(Geometry, 0.0001) as Geometry from Queens" -nlt GEOMETRY 
 	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/parcels/Queens.shp raw/MapPLUTO/Queens/QNMapPLUTO.shp
 	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/parcels/Staten_Island.shp raw/MapPLUTO/Staten_Island/SIMapPLUTO.shp
 
