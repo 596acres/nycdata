@@ -70,3 +70,12 @@ download_libraries:
 
 process_libraries: prepare_processed
 	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/libraries/libraries.shp $(wildcard raw/libraries/*.shp)
+
+download_waterfront:
+	mkdir -p raw/waterfront
+	curl -L "https://github.com/nycommons/nyc-public-waterfront/raw/master/data/shp/nyc-public-waterfront.zip" -o raw/waterfront/waterfront.zip
+	unzip raw/waterfront/waterfront.zip -d raw/waterfront
+
+process_waterfront:
+	mkdir -p processed/waterfront
+	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/waterfront/waterfront.shp $(wildcard raw/waterfront/*.shp)

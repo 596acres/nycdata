@@ -14,6 +14,7 @@ class Command(BaseCommand):
         'parcels': 'nycdata.parcels',
         'postoffices': 'nycdata.postoffices',
         'urbanrenewal': 'nycdata.urbanrenewal',
+        'waterfront': 'nycdata.waterfront',
     }
 
     def handle(self, dataset_name, *args, **options):
