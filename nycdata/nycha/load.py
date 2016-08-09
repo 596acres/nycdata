@@ -7,6 +7,7 @@ from livinglots_lots.models import Use
 from lots.models import Lot
 from owners.models import Owner
 from ..load import get_processed_data_file
+from ..parcels.models import Parcel
 from .models import NYCHADevelopment, nychadevelopment_mapping
 
 
@@ -68,6 +69,20 @@ def create_lots_for_nycha():
             del lot_kwargs['borough']
             del lot_kwargs['city']
             for geom in nycha_development.geom:
-                Lot.objects.create_lot_for_geom(MultiPolygon(geom), **lot_kwargs)
+                # Try to add each part of a split development as its parcel
+                try:
+                    parcel = Parcel.objects.get(geom__contains=geom.centroid)
+                    lot_kwargs_copy = lot_kwargs.copy()
+                    del lot_kwargs_copy['name']
+                    lot = Lot.objects.create_lot_for_parcel(parcel,
+                            **lot_kwargs_copy)
+                    lot.owner = owner
+                    lot.name = '%s: %s' % (
+                        nycha_development.name,
+                        lot.address_line1,
+                    )
+                    lot.save()
+                except Exception, e:
+                    Lot.objects.create_lot_for_geom(MultiPolygon(geom), **lot_kwargs)
         else:
             Lot.objects.create_lot_for_geom(nycha_development.geom, **lot_kwargs)
