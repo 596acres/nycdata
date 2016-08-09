@@ -30,6 +30,9 @@ def from_shapefile(strict=True, progress=True, verbose=False, **kwargs):
 
     # Add parcel to waterfrontparcel
     for waterfront_parcel in WaterfrontParcel.objects.all():
+        # Don't add parcels that are under Parks jurisdiction
+        if waterfront_parcel.ownerfixed == 'New York City Department of Parks and Recreation':
+            continue
         parcel = None
         if waterfront_parcel.bbl:
             try:
