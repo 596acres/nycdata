@@ -12,7 +12,9 @@ class PostOffice(models.Model):
     zip = models.CharField(max_length=254)
     city = models.CharField(max_length=254)
     bbl = models.CharField(max_length=254)
-    geom = models.PointField(srid=4326)
+    public = models.CharField(max_length=254, blank=True, null=True)
+    ownerfixed = models.CharField(max_length=254, blank=True, null=True)
+    geom = models.MultiPolygonField(srid=4326)
     objects = models.GeoManager()
 
 
@@ -25,6 +27,8 @@ postoffice_mapping = {
     'bin' : 'bin',
     'zip' : 'zip',
     'city' : 'city',
-    'bbl' : 'bbl',
-    'geom' : 'POINT',
+    'bbl' : 'bbl_string',
+    'public' : 'public',
+    'ownerfixed' : 'OwnerFixed',
+    'geom' : 'MULTIPOLYGON',
 }

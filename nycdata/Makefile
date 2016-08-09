@@ -57,10 +57,11 @@ process_nycha: prepare_processed
 
 download_postoffices:
 	mkdir -p raw/postoffices
-	curl -L "https://data.cityofnewyork.us/api/geospatial/gpxw-bq7a?method=export&format=Shapefile" -o raw/postoffices/postoffices.zip
+	curl -L "https://github.com/nycommons/nyc-post-offices/raw/master/data/shp/nyc-post-offices.zip" -o raw/postoffices/postoffices.zip
 	unzip raw/postoffices/postoffices.zip -d raw/postoffices
 
-process_postoffices: prepare_processed
+process_postoffices:
+	mkdir -p processed/postoffices
 	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/postoffices/postoffices.shp $(wildcard raw/postoffices/*.shp)
 
 download_libraries:
