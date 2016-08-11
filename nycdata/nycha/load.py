@@ -38,7 +38,8 @@ def create_lots_for_nycha():
         visible=True,
     )[0]
 
-    for nycha_development in NYCHADevelopment.objects.all():
+    # Exclude FHA repossessed homes, which are not really NYCHA developments
+    for nycha_development in NYCHADevelopment.objects.exclude(name__istartswith='fha repossessed'):
         print 'Adding lot for NYCHA development %s' % nycha_development.name
 
         lot_kwargs = {
