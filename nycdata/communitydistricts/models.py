@@ -47,5 +47,9 @@ class CommunityDistrictDetails(models.Model):
         null=True,
     )
 
+    class Meta:
+        verbose_name = _('community district details')
+        verbose_name_plural = _('community district details')
+
     def __unicode__(self):
         return self.name
