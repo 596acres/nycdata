@@ -10,24 +10,25 @@ from django.core.management.base import BaseCommand
 from inplace.boundaries.models import Boundary
 
 from ...citycouncildistricts.models import CityCouncilMember
+from ...load import get_processed_data_file
 
 
 class Command(BaseCommand):
-    args = 'filename'
     help = 'Loads city council members'
 
+    filename = get_processed_data_file('citycouncilmembers/citycouncilmembers.csv')
     number_pattern = re.compile('.*?(\d+).*')
     url_pattern = 'http://council.nyc.gov/d%s/html/members/home.shtml'
 
-    def handle(self, filename, *args, **options):
-        self.load_city_council_members(csv.DictReader(open(filename, 'r')))
+    def handle(self, *args, **options):
+        self.load_city_council_members(csv.DictReader(open(self.filename, 'r')))
 
     def load_city_council_members(self, rows):
         for row in rows:
             self.load_city_council_member(row)
 
     def load_city_council_member(self, row):
-        district_number = self.parse_district_number(row['district'])
+        district_number = self.parse_district_number(row['DISTRICT'])
         try:
             district = Boundary.objects.get(
                 label=district_number,
@@ -35,7 +36,7 @@ class Command(BaseCommand):
             )
             member = CityCouncilMember(
                 district=district,
-                name=row['name'],
+                name=row['NAME'],
                 url=self.make_url(district.label),
             )
             member.save()

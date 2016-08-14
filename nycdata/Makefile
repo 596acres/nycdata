@@ -80,3 +80,7 @@ download_waterfront:
 process_waterfront:
 	mkdir -p processed/waterfront
 	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/waterfront/waterfront.shp $(wildcard raw/waterfront/*.shp)
+
+download_citycouncilmembers:
+	mkdir -p processed/citycouncilmembers
+	curl -L "https://data.cityofnewyork.us/api/views/uvw5-9znb/rows.csv?accessType=DOWNLOAD" -o processed/citycouncilmembers/citycouncilmembers.csv
