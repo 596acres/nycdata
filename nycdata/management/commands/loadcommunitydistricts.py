@@ -11,14 +11,16 @@ from inplace.boundaries.models import Boundary
 
 from ...boroughs import get_borough_number
 from ...communitydistricts.models import CommunityDistrictDetails
+from ...load import get_processed_data_file
 
 
 class Command(BaseCommand):
-    args = 'filename'
     help = 'Loads community district details'
 
-    def handle(self, filename, *args, **options):
-        self.load_community_districts(csv.DictReader(open(filename, 'r')))
+    filename = get_processed_data_file('communitydistrictsdetails/communitydistrictsdetails.csv')
+
+    def handle(self, *args, **options):
+        self.load_community_districts(csv.DictReader(open(self.filename, 'r')))
 
     def load_community_districts(self, rows):
         for row in rows:

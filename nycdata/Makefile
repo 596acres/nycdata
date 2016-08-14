@@ -84,3 +84,7 @@ process_waterfront:
 download_citycouncilmembers:
 	mkdir -p processed/citycouncilmembers
 	curl -L "https://data.cityofnewyork.us/api/views/uvw5-9znb/rows.csv?accessType=DOWNLOAD" -o processed/citycouncilmembers/citycouncilmembers.csv
+
+download_communitydistrictsdetails:
+	mkdir -p processed/communitydistrictsdetails
+	curl -L "https://morph.io/ebrelsford/nyc_community_boards/data.csv?key=vHPPJAEqTatkpXdpMF%2FC&query=select+%2A+from+%27community_boards%27" -o processed/communitydistrictsdetails/communitydistrictsdetails.csv
