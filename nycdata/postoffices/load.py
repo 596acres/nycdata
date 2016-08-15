@@ -47,13 +47,16 @@ def from_shapefile(strict=True, progress=True, verbose=False, **kwargs):
             post_office.save()
 
             try:
+                post_office_name = post_office.name
+                if 'post office' not in post_office_name.lower():
+                    post_office_name += ' Post Office'
                 lot_kwargs = {
                     'added_reason': 'Loaded with post office data',
                     'city': post_office.city,
                     'commons_content_object': post_office,
                     'commons_type': 'post office',
                     'country': 'USA',
-                    'name': post_office.name,
+                    'name': post_office_name,
                     'known_use': use,
                     'known_use_certainty': 8,
                     'known_use_locked': True,
