@@ -46,13 +46,16 @@ def from_shapefile(strict=True, progress=True, verbose=False, **kwargs):
             library.save()
 
             try:
+                library_name = library.name
+                if 'library' not in library_name.lower():
+                    library_name += ' Library'
                 lot_kwargs = {
                     'added_reason': 'Loaded with library data',
                     'city': library.city,
                     'commons_content_object': library,
                     'commons_type': 'library',
                     'country': 'USA',
-                    'name': library.name,
+                    'name': library_name,
                     'known_use': use,
                     'known_use_certainty': 8,
                     'known_use_locked': True,
