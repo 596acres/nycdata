@@ -42,6 +42,9 @@ def from_shapefile(strict=True, progress=True, verbose=False, **kwargs):
             except Exception:
                 pass
         if parcel:
+            # Delete any waterfront lots
+            parcel.lot_set.filter(commons_type='waterfront').delete()
+
             library.parcel = parcel
             library.save()
 
