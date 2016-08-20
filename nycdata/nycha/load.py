@@ -3,8 +3,9 @@ import os
 from django.contrib.gis.geos import MultiPolygon
 from django.contrib.gis.utils import LayerMapping
 
+from livinglots_lots.exceptions import ParcelAlreadyInLot
 from livinglots_lots.models import Use
-from lots.models import Lot
+from lots.models import Lot, LotGroup
 from owners.models import Owner
 from ..load import get_processed_data_file
 from ..parcels.models import Parcel
@@ -26,6 +27,16 @@ def from_shapefile(create_lots=True, strict=True, progress=True, verbose=False, 
 
     if create_lots:
         create_lots_for_nycha()
+
+
+def get_or_create_lotgroup(lots):
+    """Create lotgroup, checking for an existing one first."""
+    created = not LotGroup.objects.filter(lot__in=lots).exists()
+    lotgroup = lots[0].group_with(*lots[1:])
+    if not lotgroup.added_reason:
+        lotgroup.added_reason = lots[0].added_reason
+        lotgroup.save()
+    return lotgroup, created
 
 
 def create_lots_for_nycha():
@@ -86,4 +97,17 @@ def create_lots_for_nycha():
                 except Exception, e:
                     Lot.objects.create_lot_for_geom(MultiPolygon(geom), **lot_kwargs)
         else:
-            Lot.objects.create_lot_for_geom(nycha_development.geom, **lot_kwargs)
+            lots = []
+            for geom in nycha_development.geom:
+                try:
+                    parcel = Parcel.objects.get(geom__contains=geom.centroid)
+                    lot = Lot.objects.create_lot_for_parcel(parcel, **lot_kwargs)
+
+                except (Parcel.DoesNotExist, ParcelAlreadyInLot):
+                    lot = Lot.objects.create_lot_for_geom(nycha_development.geom,
+                            **lot_kwargs)
+                lot.owner = owner
+                lot.save()
+                lots.append(lot)
+            if len(lots) > 1:
+                get_or_create_lotgroup(lots)
