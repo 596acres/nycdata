@@ -101,6 +101,9 @@ def create_lots_for_nycha():
             for geom in nycha_development.geom:
                 try:
                     parcel = Parcel.objects.get(geom__contains=geom.centroid)
+
+                    # Delete any waterfront lots
+                    parcel.lot_set.filter(commons_type='waterfront').delete()
                     lot = Lot.objects.create_lot_for_parcel(parcel, **lot_kwargs)
 
                 except (Parcel.DoesNotExist, ParcelAlreadyInLot):
