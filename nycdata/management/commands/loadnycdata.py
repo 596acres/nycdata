@@ -12,10 +12,14 @@ class Command(BaseCommand):
         'libraries': 'nycdata.libraries',
         'nycha': 'nycdata.nycha',
         'parcels': 'nycdata.parcels',
+        'parks': 'nycdata.parks',
         'postoffices': 'nycdata.postoffices',
         'urbanrenewal': 'nycdata.urbanrenewal',
         'waterfront': 'nycdata.waterfront',
     }
+
+    def add_arguments(self, parser):
+        parser.add_argument('dataset_name', type=str)
 
     def handle(self, dataset_name, *args, **options):
         try:

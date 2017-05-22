@@ -88,3 +88,12 @@ download_citycouncilmembers:
 download_communitydistrictsdetails:
 	mkdir -p processed/communitydistrictsdetails
 	curl -L "https://morph.io/ebrelsford/nyc_community_boards/data.csv?key=vHPPJAEqTatkpXdpMF%2FC&query=select+%2A+from+%27community_boards%27" -o processed/communitydistrictsdetails/communitydistrictsdetails.csv
+
+download_parks:
+	mkdir -p raw/parks
+	curl -L "https://data.cityofnewyork.us/api/geospatial/rjaj-zgq7?method=export&format=Shapefile" -o raw/parks/parks.zip
+	unzip raw/parks/parks.zip -d raw/parks
+
+process_parks:
+	mkdir -p processed/parks
+	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/parks/parks.shp $(wildcard raw/parks/*.shp)
