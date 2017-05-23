@@ -28,40 +28,35 @@ def from_shapefile(strict=True, progress=True, verbose=False, **kwargs):
         'New York City Department of Parks and Recreation',
         defaults={ 'owner_type': 'public',}
     )[0]
-    park_use = Use.objects.get_or_create(
+    use = Use.objects.get_or_create(
         name='park',
         visible=True,
     )[0]
-    garden_use = Use.objects.get_or_create(
-        name='community garden',
-        visible=True,
-    )[0]
 
-    for park in Park.objects.all():
+    for park in Park.objects.exclude(typecatego='Garden'):
         try:
-            create_lot_for_park(park, park_use, garden_use, owner)
+            create_lot_for_park(park, use, owner)
         except Exception as e:
             print 'Exception getting parcels for park %s. Skipping.' % park.signname
             print e
             continue
 
 
-def create_lot_for_park(park, park_use, garden_use, default_owner):
+def create_lot_for_park(park, use, default_owner):
     lot_kwargs = {
         'added_reason': 'Loaded with park data',
         'commons_content_object': park,
         'commons_type': 'park',
         'country': 'USA',
         'name': park.signname,
-        'known_use': park_use,
+        'known_use': use,
         'known_use_certainty': 8,
         'known_use_locked': True,
         'owner_opt_in': True,
         'state_province': 'NY',
     }
-    if park.typecatego == 'Garden':
-        lot_kwargs['commons_type'] = 'vacant lot / garden'
-        lot_kwargs['known_use'] = garden_use
+    if lot_kwargs['name'] in ('Triangle', 'Park',):
+        lot_kwargs['name'] = None
 
     parcels = []
     matching_parcels = Parcel.objects.filter(geom__overlaps=park.geom).annotate(
