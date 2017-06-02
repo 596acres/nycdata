@@ -1,5 +1,8 @@
+import json
 import requests
 
+from django.contrib.gis.db.models.functions import Area, Intersection, Transform
+from django.contrib.gis.geos import GEOSGeometry
 from django.db import IntegrityError
 
 from ..parcels.models import Parcel
@@ -28,11 +31,35 @@ def from_github(verbose=False, **kwargs):
         add_urban_renewal_record(urban_renewal_parcel)
 
 
+def get_parcel(record):
+    parcel = None
+    bbl = record['properties']['BBL']
+
+    try:
+        parcel = Parcel.objects.get(bbl=bbl)
+    except Parcel.DoesNotExist:
+        polygon = GEOSGeometry(json.dumps(record['geometry']))
+        try:
+            parcel = Parcel.objects.filter(geom__overlaps=polygon).annotate(
+                intersect_area=Area(Transform(Intersection('geom', polygon), 2263))
+            ).order_by('-intersect_area')[0]
+        except IndexError:
+            # No parcel found, None will be returned
+            pass
+    return parcel
+
+
 def add_urban_renewal_record(record):
     properties = record['properties']
+    parcel = get_parcel(record)
+
+    if not parcel:
+        print 'No parcel for %s, skipping' % properties['BBL']
+        return None
+
     try:
         urban_renewal_record = UrbanRenewalRecord(
-            parcel=Parcel.objects.get(bbl=properties['BBL']),
+            parcel=parcel,
             disposition_short=properties['disposition_filterable'],
             disposition_long=properties['disposition_display'],
             parking=properties['in_parking'] == 1,
@@ -40,9 +67,6 @@ def add_urban_renewal_record(record):
         )
         urban_renewal_record.save()
         return urban_renewal_record
-    except Parcel.DoesNotExist:
-        print 'Could not find %s' % properties['BBL']
-        return None
     except IntegrityError as e:
-        print 'Error adding %s: %s' % (properties['BBL'], e)
+        # Parcel already associated with an Urban Renewal Record
         return None
