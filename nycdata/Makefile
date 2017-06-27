@@ -5,6 +5,7 @@ clean: clean_db clean_processed clean_raw
 
 prepare_processed:
 	mkdir -p processed
+	mkdir -p processed/landmarks
 	mkdir -p processed/libraries
 	mkdir -p processed/nycha
 	mkdir -p processed/parcels
@@ -97,3 +98,12 @@ download_parks:
 process_parks:
 	mkdir -p processed/parks
 	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/parks/parks.shp $(wildcard raw/parks/*.shp)
+
+download_landmarks:
+	mkdir -p raw/landmarks
+	curl -L "https://data.cityofnewyork.us/api/geospatial/ch5p-r223?method=export&format=Shapefile" -o raw/landmarks/landmarks.zip
+	unzip raw/landmarks/landmarks.zip -d raw/landmarks
+
+process_landmarks: prepare_processed
+	mkdir -p processed/landmarks
+	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/landmarks/landmarks.shp $(wildcard raw/landmarks/*.shp)
