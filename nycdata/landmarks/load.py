@@ -37,8 +37,8 @@ def from_shapefile(strict=True, progress=True, verbose=False, **kwargs):
     """
     Load landmark data into the database from the processed shapefile.
     """
-    # shp = get_processed_data_file(os.path.join('landmarks', 'landmarks.shp'))
-    # mapping = LayerMapping(Landmark, shp, landmark_mapping, transform=False)
-    # mapping.save(strict=strict, progress=progress, verbose=verbose, **kwargs)
+    shp = get_processed_data_file(os.path.join('landmarks', 'landmarks.shp'))
+    mapping = LayerMapping(Landmark, shp, landmark_mapping, transform=False)
+    mapping.save(strict=strict, progress=progress, verbose=verbose, **kwargs)
 
     add_landmarks_to_parcels()
