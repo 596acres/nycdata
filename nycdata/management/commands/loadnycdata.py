@@ -15,6 +15,7 @@ class Command(BaseCommand):
         'parcels': 'nycdata.parcels',
         'parks': 'nycdata.parks',
         'postoffices': 'nycdata.postoffices',
+        'shoreline': 'nycdata.shoreline',
         'urbanrenewal': 'nycdata.urbanrenewal',
         'waterfront': 'nycdata.waterfront',
     }

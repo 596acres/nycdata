@@ -107,3 +107,13 @@ download_landmarks:
 process_landmarks: prepare_processed
 	mkdir -p processed/landmarks
 	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -overwrite processed/landmarks/landmarks.shp $(wildcard raw/landmarks/*.shp)
+
+download_shoreline:
+	mkdir -p raw/shoreline
+	curl -L "https://data.cityofnewyork.us/api/geospatial/2qj2-cctx?method=export&format=Shapefile" -o raw/shoreline/shoreline.zip
+	unzip raw/shoreline/shoreline.zip -d raw/shoreline
+
+process_shoreline: prepare_processed
+	mkdir -p processed/shoreline
+	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -select feat_code -overwrite processed/shoreline/shoreline.shp $(wildcard raw/shoreline/*.shp)
+	ogr2ogr -f "ESRI Shapefile" -t_srs EPSG:4326 -dialect sqlite -sql "SELECT ST_Union(Geometry) from shoreline" -overwrite processed/shoreline/shoreline-dissolved.shp processed/shoreline/shoreline.shp
